@@ -12,7 +12,7 @@ class StockTimeSeries:
 		function = 'TIME_SERIES_INTRADAY'
 		request_string = '%sfunction=%s&symbol=%s&interval=%smin&outputsize=%s&apikey=%s&datatype=%s'%\
 							(self.BASE_URL,function,symbol,interval,outputsize,self.API_KEY,datatype)
-							
+
 		return request_string
 
 	def get_Daily(symbol,adjusted=True,outputsize='full',datatype='json'):	
@@ -28,8 +28,8 @@ class StockTimeSeries:
 		request_string = '%sfunction=%s&symbol=%s&outputsize=%s&apikey=%s&datatype=%s'%\
 							(self.BASE_URL,function,symbol,outputsize,self.API_KEY,datatype)
 
-		return request_strin
-g
+		return request_string
+		
 	def get_Weekly(symbol,adjusted=True,datatype='json'):
 		"""
 		Returns weekly time series (last trading day of each week, weekly open, weekly high, 
