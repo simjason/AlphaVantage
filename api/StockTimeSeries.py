@@ -2,31 +2,12 @@
 REST API Wrapper for Alpha Vantage StockTimeSeries
 '''
 from Util import TimeSeries
-import numpy as np
-import pandas as pd
 
 class StockTimeSeries(TimeSeries):
 
 	def __init__(self,base_url,api_key):
 		self.BASE_URL = base_url
 		self.API_KEY = api_key
-
-	def StockDataFrame(req_str,ts_json_key):
-		"""
-		Extracts values from json response and returns a Pandas DataFrame
-		Structure of json response for Stock Time Series:
-			-The first key returns a dictionary containing metadata about the series
-			-The second key returns a dictionary containing OHLC and other information, with
-			 timestamps as the key values.
-		"""
-
-		jsonDict = GETRequest(req_str)	
-
-		time_series = jsonDict[ts_json_key]
-
-		df = pd.DataFrame.from_dict(time_series,orient='index',columns = [key for key in time_series])
-
-		return df
 
 	def get_Intraday(self,symbol,interval=15,outputsize='compact',datatype='json'):
 		"""
@@ -39,14 +20,12 @@ class StockTimeSeries(TimeSeries):
 		# Key to extract time series data from json dict
 
 		ts_json_key = 'Time Series (%smin)'%(interval)
-
 		req_str = '%sfunction=%s&symbol=%s&interval=%smin&outputsize=%s&apikey=%s&datatype=%s'%\
-							(self.BASE_URL,function,symbol,interval,outputsize,self.API_KEY,datatype)
+					(self.BASE_URL,function,symbol,interval,outputsize,self.API_KEY,datatype)
 
-			
-		return StockDataFrame(req_str,ts_json_key)
+		return self.toDataFrame(req_str,ts_json_key)
 
-	def get_Daily(symbol,adjusted=True,outputsize='full',datatype='json'):	
+	def get_Daily(self,symbol,adjusted=True,outputsize='full',datatype='json'):	
 		"""
 		Returns daily time series (date, daily open, daily high, daily low, daily 
 		close, daily volume) of the global equity specified, covering 20+ years of 
@@ -63,12 +42,12 @@ class StockTimeSeries(TimeSeries):
 		if(adjusted):
 			function+='_ADJUSTED'
 
-		request_string = '%sfunction=%s&symbol=%s&outputsize=%s&apikey=%s&datatype=%s'%\
+		req_str = '%sfunction=%s&symbol=%s&outputsize=%s&apikey=%s&datatype=%s'%\
 							(self.BASE_URL,function,symbol,outputsize,self.API_KEY,datatype)
 
-		return 1
+		return self.toDataFrame(req_str,ts_json_key)
 
-	def get_Weekly(symbol,adjusted=True,datatype='json'):
+	def get_Weekly(self,symbol,adjusted=True,datatype='json'):
 		"""
 		Returns weekly time series (last trading day of each week, weekly open, weekly high, 
 		weekly low, weekly close, weekly volume) of the global equity specified, covering 20+ 
@@ -87,12 +66,12 @@ class StockTimeSeries(TimeSeries):
 			function+='_Adjusted'
 			ts_json_key = 'Weekly Adjusted Time Series'
 
-		request_string = '%sfunction=%s&symbol=%s&apikey=%s&datatype=%s'%\
+		req_str = '%sfunction=%s&symbol=%s&apikey=%s&datatype=%s'%\
 							(self.BASE_URL,function,symbol,self.API_KEY,datatype)
 							
-		return request_string
+		return self.toDataFrame(req_str,ts_json_key)
 
-	def get_Monthly(symbol,adjusted=True,datatype='json'):
+	def get_Monthly(self,symbol,adjusted=True,datatype='json'):
 		"""
 		This API returns monthly time series (last trading day of each month, monthly open, 
 		monthly high, monthly low, monthly close, monthly volume) of the global equity specified, 
@@ -111,28 +90,30 @@ class StockTimeSeries(TimeSeries):
 			function+='_Adjusted'
 			ts_json_key = 'Monthly Adjusted Time Series'
 
-		request_string = '%sfunction=%s&symbol=%s&apikey=%s&datatype=%s'%\
+		req_str = '%sfunction=%s&symbol=%s&apikey=%s&datatype=%s'%\
 							(self.BASE_URL,function,symbol,self.API_KEY,datatype)
 
-		return request_string
+		return self.toDataFrame(req_str,ts_json_key)
 
-	def get_Quote_Endpoint(symbol,datatype='json'):
+	def get_Quote_Endpoint(self,symbol,datatype='json'):
 		"""
 		A lightweight alternative to the time series APIs, this service returns the latest 
 		price and volume information for a security of your choice.
 		"""
 
-		function = 'GLOBAL_QUOTES'
+		function = 'GLOBAL_QUOTE'
 		
 		ts_json_key = 'Global Quote'
 		
-		request_string = '%sfunction=%s&symbol=%s&apikey=%s&datatype=%s'%\
+		req_str = '%sfunction=%s&symbol=%s&apikey=%s&datatype=%s'%\
 							(self.BASE_URL,function,symbol,self.API_KEY,datatype)
 
-		return request_string
+		df = self.toDataFrame(req_str,ts_json_key)
+		df.rename(index=str, columns={0: "Info"},inplace = True)
+		return df 
 
 	def get_Search_Endpoint():
 		"""
 		TODO for whenever a search box is implemented
 		"""		
-		pass
+		pass		

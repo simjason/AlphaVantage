@@ -1,8 +1,29 @@
 import unittest
+from .api.StockTimeSeries import StockTimeSeries
 
-import os, sys, inspect
-cmd_folder = os.path.realpath(os.path.abspath(os.path.split(inspect.getfile( inspect.currentframe() ))[0]))
-if cmd_folder not in sys.path:
-    sys.path.insert(0, cmd_folder)
+class TestStockTimeSeries(unittest.TestCase):
+    '''Test will be run with comparisons of the json text returned from Alpha Vantage's Demo API Call'''
+    def test_get_Intraday(self):
 
-print(cmd_folder)
+        pass
+
+    def test_get_Daily(self):
+
+        pass
+
+    def test_get_Weekly(self): 
+
+        pass
+
+    def test_get_Monthly(self): 
+
+        pass        
+
+    def test_get_Quote_Endpoint(self): 
+
+        pass                
+
+
+class MyTest(unittest.TestCase):
+    def test(self):
+        self.assertEqual(fun(3), 4)        
