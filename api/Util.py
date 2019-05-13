@@ -2,22 +2,22 @@ import requests
 import numpy as np
 import pandas as pd
 
-class TimeSeries(object):
+class Util(object):
 
     def GETRequest(self,req_str,datatype='json'):
         
         try:
             response = requests.get(req_str)
             response.raise_for_status()
-        except requests.exceptions.HTTPError as err:
-            print(err)
-            sys.exit(1)
 
-        if datatype == 'json':
+            if datatype == 'json':
             # dictionary of json reponse is returned
-            return response.json()
-        else:
-            print('CSV Downloaded.')
+                return response.json()
+            else:
+                return ('CSV Downloaded.')
+        except requests.exceptions.HTTPError as err:
+            return(err)
+
 
     def toDataFrame(self,req_str,ts_json_key):
         
@@ -29,6 +29,8 @@ class TimeSeries(object):
         timestamps as the key values.       
         """
         jsonDict = self.GETRequest(req_str)
+
+        assert(ts_json_key in jsonDict)
 
         time_series = jsonDict[ts_json_key] 
 

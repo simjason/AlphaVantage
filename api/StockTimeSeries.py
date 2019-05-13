@@ -1,9 +1,9 @@
 '''
 REST API Wrapper for Alpha Vantage StockTimeSeries
 '''
-from Util import TimeSeries
+from api.Util import Util
 
-class StockTimeSeries(TimeSeries):
+class StockTimeSeries(Util):
 
 	def __init__(self,base_url,api_key):
 		self.BASE_URL = base_url
@@ -92,7 +92,6 @@ class StockTimeSeries(TimeSeries):
 
 		req_str = '%sfunction=%s&symbol=%s&apikey=%s&datatype=%s'%\
 							(self.BASE_URL,function,symbol,self.API_KEY,datatype)
-
 		return self.toDataFrame(req_str,ts_json_key)
 
 	def get_Quote_Endpoint(self,symbol,datatype='json'):

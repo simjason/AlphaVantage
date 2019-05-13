@@ -5,7 +5,7 @@ import requests
 import os
 import sys
 
-from StockTimeSeries import StockTimeSeries
+from api.StockTimeSeries import StockTimeSeries
 
 class AlphaVantage:
     BASE_URL = 'https://www.alphavantage.co/query?'
